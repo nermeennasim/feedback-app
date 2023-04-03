@@ -60,8 +60,7 @@ function App(){
                         
                                                
                         <Route  path='/about'element={<AboutPage/>}/>
-                         <Route  path='/post/:id/:name'element={<Post/>}/>
-                       
+                                            
                 </Routes>
              
                 <AboutIconLink/>
