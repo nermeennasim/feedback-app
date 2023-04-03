@@ -5,7 +5,9 @@ import {useState} from 'react'
 import FeedbackData from './data/FeedbackData'
 import FeedbackStats from './components/FeedbackStats'
 import AboutPage from './pages/AboutPage'
-import { BrowserRouter as Router,Route} from 'react-router-dom'
+import {BrowserRouter as Router, Route, Routes, NavLink} from 'react-router-dom'
+import Card from './components/shared/Card'
+import AboutIconLink from './components/AboutIconLink'
 
 import FeedbackForm from './components/FeedbackForm'
 
@@ -33,20 +35,45 @@ function App(){
 }
     return (
             <>
-            <Router>
-                <Header  />
+          <Router>
+            <Header  />
                 
-                <div className='container'>
-                    <Route exact path='/'>
-                        < FeedbackForm handleAdd={addFeedback}/>
-                            <FeedbackStats feedback={feedback}/>
-                            <FeedbackList feedback={feedback} handleDelete={deleteFeeback}/>
-                            <AboutPage/>
+            <div className='container'>
+            <Routes>
+           
+              
+                        <Route exact path='/' element=                        
+                        {
+                            <>
+                             < FeedbackForm handleAdd={addFeedback}/>
+                                <FeedbackStats feedback={feedback}/>
+                                <FeedbackList feedback={feedback} handleDelete={deleteFeeback}/>
+                               
+                            </>
 
-                    </Route>
 
+                        }>
 
-                    <Route  path='/about'component={AboutPage}/>
+                        </Route>
+                                             
+                        
+                                               
+                        <Route  path='/about'element={<AboutPage/>}/>
+                       
+                </Routes>
+                <Card>
+                    <NavLink to='/' activeClassName="active">
+                        Home
+
+                    </NavLink>
+                     <NavLink to='/about' activeClassName="active">
+                        About
+
+                    </NavLink>
+
+                </Card>
+              
+                <AboutIconLink/>
                 </div>
                 </Router>
             </>
