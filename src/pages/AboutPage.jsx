@@ -16,7 +16,7 @@ function AboutPage() {
 
             </div>
  
-            <a href='/' component=''/>
+          <div><a href='/App'>Back to Home</a></div>
         </Card>
   )
 }
