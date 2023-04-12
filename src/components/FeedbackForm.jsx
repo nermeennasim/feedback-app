@@ -1,71 +1,72 @@
-import React from 'react'
-import Card from './shared/Card'
-import {useState} from 'react'
-import Button from './shared/Button'
-import RatingSelect from './RatingSelect'
+import React, { useContext } from "react";
+import Card from "./shared/Card";
+import { useState, useEffect } from "react";
+import Button from "./shared/Button";
+import RatingSelect from "./RatingSelect";
+import FeedbackContext from "../context/FeedbackContext";
 
+function FeedbackForm({}) {
+	const [text, setText] = useState("");
+	const [btnDisabled, setBtnDisabled] = useState(true);
+	const [message, setMessage] = useState("");
+	const [rating, setRating] = useState(10);
+	const { addFeedback, feedbackEdit } = useContext(FeedbackContext);
 
-function FeedbackForm({handleAdd}) {
-    const [text,setText] = useState('');
-    const [btnDisabled,setBtnDisabled]= useState(true);
-    const [message,setMessage] = useState('');
-    const [rating, setRating] = useState(10)
+	//use effect takes two arguments, one function,
+	// other if needs to load evertime or it needs to load just one time
 
-    //handle text change event
-    const handleTextChange=(e)=>{
-        //check if text is zero
-        if(text === ''){
+	//handle text change event
+	const handleTextChange = (e) => {
+		//check if text is zero
+		if (text === "") {
+			setBtnDisabled(true);
+			setMessage(null);
+		} else if (text !== "" && text.trim().length <= 10) {
+			setMessage("Text must be atleast 10 characters");
+			setBtnDisabled(true);
+		} else {
+			setMessage(null);
+			setBtnDisabled(false);
+		}
 
-            setBtnDisabled(true)
-            setMessage(null)
-        }     
-        else if(text!== '' && text.trim().length<=10){
-            setMessage('Text must be atleast 10 characters')
-            setBtnDisabled(true)
-        }else{
-            setMessage(null)
-            setBtnDisabled(false)
-        }
-        
-        setText(e.target.value)
+		setText(e.target.value);
+	};
 
-    }
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		if (text.trim().length > 10) {
+			const newFeedbackItem = {
+				text,
+				rating,
+			};
+			addFeedback(newFeedbackItem);
+			//clear text box
+			setText("");
+		}
+	};
 
-    const handleSubmit=(e)=>{
-        e.preventDefault();
-        if(text.trim().length>10){
-            const newFeedbackItem = {
+	return (
+		<Card>
+			<form onSubmit={handleSubmit}>
+				<h2>How would you rate your service with us?</h2>
+				<RatingSelect select={(rating) => setRating(rating)} />
 
-                text,
-                rating
-            }
-            handleAdd(newFeedbackItem)
-            //clear text box
-            setText('')
-        }
-            
-    }
+				<div className="input-group">
+					<input
+						onChange={handleTextChange}
+						type="text"
+						value={text}
+						placeholder="Write a review"
+					/>
+					<Button type="submit" isDisabled={btnDisabled}>
+						Send
+					</Button>
+				</div>
 
-  return (
-    <Card>
-      <form onSubmit={handleSubmit}>
-        <h2>How would you rate your service with us?</h2>
-       <RatingSelect select = {(rating)=> setRating(rating)}/>
-
-
-       <div className="input-group">
-            <input onChange={handleTextChange}
-             type='text'
-             value={text}
-              placeholder='Write a review'/>
-            <Button  type="submit" isDisabled={btnDisabled}>Send</Button>
-           
-       </div>
-
-       {message && <div className='message'>{message}</div>}
-      </form>
-    </Card>
-  )
+				{message && <div className="message">{message}</div>}
+			</form>
+		</Card>
+	);
 }
 
-export default FeedbackForm
+export default FeedbackForm;
