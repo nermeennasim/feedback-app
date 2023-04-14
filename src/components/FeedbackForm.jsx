@@ -10,11 +10,18 @@ function FeedbackForm({}) {
 	const [btnDisabled, setBtnDisabled] = useState(true);
 	const [message, setMessage] = useState("");
 	const [rating, setRating] = useState(10);
-	const { addFeedback, feedbackEdit } = useContext(FeedbackContext);
+	const { addFeedback, feedbackEdit, updateFeedback } =
+		useContext(FeedbackContext);
 
 	//use effect takes two arguments, one function,
 	// other if needs to load evertime or it needs to load just one time
-
+	useEffect(() => {
+		if (feedbackEdit.edit === true) {
+			setBtnDisabled(false);
+			setRating(feedbackEdit.item.rating);
+			setText(feedbackEdit.item.text);
+		}
+	}, [feedbackEdit]);
 	//handle text change event
 	const handleTextChange = (e) => {
 		//check if text is zero
@@ -39,7 +46,13 @@ function FeedbackForm({}) {
 				text,
 				rating,
 			};
-			addFeedback(newFeedbackItem);
+
+			if (feedbackEdit.edit === true) {
+				updateFeedback(feedbackEdit.item.id, newFeedbackItem);
+			} else {
+				addFeedback(newFeedbackItem);
+			}
+
 			//clear text box
 			setText("");
 		}
